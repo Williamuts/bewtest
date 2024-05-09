@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTS BEWBOT</title>
+    <style type="text/css">
+        body {
+            
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease;
+    position: relative;
+    background-image: url('123.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Optional */
+
+        }
+    </style>
+    <title>BEWbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        .title-button {
+            position: absolute;
+            top: 893px; /* Adjust as needed */
+            left: 1300px; /* Adjust as needed */
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .button-logo-container {
+            text-align: center;
+            margin-bottom: 20px; /* Adjust as needed */
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            overflow-y: auto;
+            height: calc(100vh - 100px); /* Adjusted height for taller chatbot space */
+        }
+
+        .message {
+            padding: 15px; /* Increase padding */
+            margin-bottom: 15px; /* Increase margin */
+            border-radius: 8px;
+            max-width: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word; /* Ensure long messages wrap within the container */
+            overflow-wrap: break-word;
+            font-size: 16px; /* Increase font size */
+        }
+
+        .user-message {
+            background-color: rgba(225, 247, 213, 0.9); /* Semi-transparent light green */
+            color: #333;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: rgba(194, 230, 247, 0.9); /* Semi-transparent light blue */
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .input-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-container input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+        .input-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2846a9;
+            color: white;
+            cursor: pointer;
+            outline: none;
+        }
+        .dark-mode {
+            background-color: #222; /* Dark background color */
+            color: #fff; /* White text color */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+        }
+
+        .dark-mode .input-container button {
+            background-color: #fff; /* White button background color */
+            color: #222; /* Dark button text color */
+        }
+
+        .dark-mode .title-button {
+            color: #fff; /* White title button text color */
+        }
+
+        .dark-mode .chat-container {
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark background */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow */
+        }
+
+        .dark-mode .message {
+            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white message background */
+            color: #fff; /* White message text color */
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="button-logo-container">
+    <button class="title-button" onclick="toggleDarkMode()">BEWbot</button>
+    <img src="utslogo.jfif" class="img-fluid" alt="UTS Logo" style="width: 200px;"> 
+    </div>
+    <div class="chat-container" id="chat-container">
+        <!-- Chat messages will be displayed here -->
+    </div>
+    <div class="input-container">
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+    var userInput = document.getElementById("message-input").value;
+    displayMessage("You: " + userInput, "user-message");
+
+    // Send user message to backend
+    fetch("http://localhost:3001/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: userInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayMessage("BEWbot: " + data.message, "bot-message");
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+    // Clear input field
+    document.getElementById("message-input").value = "";
+}
+
+function displayMessage(message, className) {
+    var chatContainer = document.getElementById("chat-container");
+    var messageElement = document.createElement("div");
+    messageElement.textContent = message;
+    messageElement.classList.add("message", className);
+    chatContainer.appendChild(messageElement);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+}
+
+// Add event listener for Enter key
+document.getElementById("message-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    document.querySelectorAll(".chat-container, .message, .input-container").forEach(element => {
+        element.classList.toggle("dark-mode");
+    });
+
+    var titleButton = document.querySelector(".title-button");
+    titleButton.classList.toggle("dark-mode");
+}
+    </script>
+    <script src="BEW-master\BEWserver.js"></script>
+
+</body>
+</html>
