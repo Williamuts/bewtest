@@ -163,7 +163,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.apiKey}` // Accessing apiKey from environmental variables
+                "Authorization": `Bearer ${process.env.API_KEY}` // Accessing apiKey from environmental variables
             },
             body: JSON.stringify({
                 model: "ft:gpt-3.5-turbo-0125:bew-chatbot:bewbot:9HV6gPEJ",
