@@ -155,15 +155,15 @@
         <script type="module" src="./config.js"></script>
     <script>
         async function sendMessage() {
-            const userInput = document.getElementById("message-input").value;
-            displayMessage("You: " + userInput, "user-message");
+    const userInput = document.getElementById("message-input").value;
+    displayMessage("You: " + userInput, "user-message");
 
-            try {
-                const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${apiKey}`
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.apiKey}` // Accessing apiKey from environmental variables
             },
             body: JSON.stringify({
                 model: model,
@@ -186,13 +186,12 @@
         });
 
         const data = await response.json();
-            const botMessage = data.choices[0].message.content;
-            displayMessage("BEWbot: " + botMessage, "bot-message");
-        } catch (error) {
-            console.error("Error:", error);
-            displayMessage("BEWbot: Sorry, there was an error processing your request.", "bot-message");
-        }
-
+        const botMessage = data.choices[0].message.content;
+        displayMessage("BEWbot: " + botMessage, "bot-message");
+    } catch (error) {
+        console.error("Error:", error);
+        displayMessage("BEWbot: Sorry, there was an error processing your request.", "bot-message");
+    }
     // Clear input field
     document.getElementById("message-input").value = "";
 }
