@@ -175,7 +175,13 @@
         }
 
         function toggleDarkMode() {
-            // Function to toggle dark mode if needed
+            document.body.classList.toggle("dark-mode");
+    document.querySelectorAll(".chat-container, .message, .input-container").forEach(element => {
+        element.classList.toggle("dark-mode");
+    });
+
+    var titleButton = document.querySelector(".title-button");
+    titleButton.classList.toggle("dark-mode");
         }
     </script>
     <script src="BEWserver.js"></script>
